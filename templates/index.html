@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSphere - AI Career Advisor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            text-align: right;
+        }
+        
+        .message.agent {
+            text-align: left;
+        }
+        
+        .message-content {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+        }
+        
+        .message.agent .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .chat-input {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #667eea;
+        }
+        
+        .input-group button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .input-group button:hover {
+            background: #5a6fd8;
+        }
+        
+        .input-group button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .quick-action {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .quick-action:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 10px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .status.connected {
+            color: #28a745;
+        }
+        
+        .status.error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 SkillSphere</h1>
+            <p>Your AI-Powered Career & Learning Advisor</p>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3>Career Guidance Chat</h3>
+                <div class="status" id="status">Connecting...</div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="message agent">
+                    <div class="message-content">
+                        👋 Welcome to SkillSphere! I'm your AI career advisor. I'm here to help you discover your perfect career path and create a personalized learning plan. 
+                        
+                        Let's start by getting to know you better. What's your name, and what brings you here today?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="quick-action" onclick="sendQuickMessage('I want to explore career options')">
+                    🎯 Explore Careers
+                </div>
+                <div class="quick-action" onclick="sendQuickMessage('Help me analyze my skills')">
+                    📊 Analyze Skills
+                </div>
+                <div class="quick-action" onclick="sendQuickMessage('I need a learning plan')">
+                    📚 Learning Plan
+                </div>
+                <div class="quick-action" onclick="sendQuickMessage('Show me scholarship options')">
+                    💰 Scholarships
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                SkillSphere is thinking...
+            </div>
+            
+            <div class="chat-input">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Type your message here..." 
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button id="sendButton" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isConnected = false;
+        let currentUserId = 'user_' + Date.now();
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            checkConnection();
+            document.getElementById('messageInput').focus();
+        });
+        
+        // Check backend connection
+        async function checkConnection() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    isConnected = true;
+                    updateStatus('Connected & Ready', 'connected');
+                } else {
+                    updateStatus('Backend Issues', 'error');
+                }
+            } catch (error) {
+                updateStatus('Connection Failed', 'error');
+                console.error('Connection check failed:', error);
+            }
+        }
+        
+        // Update status display
+        function updateStatus(message, type) {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+            statusElement.className = `status ${type}`;
+        }
+        
+        // Handle Enter key press
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        // Send message to agent
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || !isConnected) return;
+            
+            // Clear input and disable send button
+            input.value = '';
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            
+            // Add user message to chat
+            addMessage(message, 'user');
+            
+            // Show typing indicator
+            showTyping(true);
+            
+            try {
+                // Send to backend
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        user_id: currentUserId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // Add agent response
+                    addMessage(data.response.message, 'agent');
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again.', 'agent');
+                }
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                addMessage('Connection error. Please check your connection and try again.', 'agent');
+            } finally {
+                showTyping(false);
+                sendButton.disabled = false;
+                input.focus();
+            }
+        }
+        
+        // Send quick action message
+        function sendQuickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+        
+        // Add message to chat
+        function addMessage(content, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = content;
+            
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Show/hide typing indicator
+        function showTyping(show) {
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = show ? 'block' : 'none';
+            
+            if (show) {
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
