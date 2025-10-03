@@ -1,4 +1,4 @@
-# 🎯 SkillSphere - AI-Powered Career & Learning Advisor
+# SkillSphere - AI-Powered Career & Learning Advisor
 
 > Transform career uncertainty into a personalized, efficient, and cost-effective learning journey with AI-driven guidance.
 
@@ -6,7 +6,7 @@
 [![Powered by Gemini AI](https://img.shields.io/badge/Powered%20by-Gemini%20AI-34A853?style=flat-square)](https://ai.google.dev/)
 [![Built with Flask](https://img.shields.io/badge/Built%20with-Flask-000000?style=flat-square&logo=flask)](https://flask.palletsprojects.com/)
 
-## 📋 Table of Contents
+## Table of Contents
 - [Problem Statement](#-problem-statement)
 - [Our Solution](#-our-solution)
 - [Features](#-features)
@@ -19,7 +19,7 @@
 - [Contributing](#-contributing)
 - [License](#-license)
 
-## 🎯 Problem Statement
+## Problem Statement
 
 Students and professionals struggle with career uncertainty and inefficient upskilling because traditional guidance is **generic, stereotypical, and disconnected from the job market**.
 
@@ -42,41 +42,41 @@ SkillSphere provides a **data-driven AI platform** that transforms career uncert
 | **High Financial Risk** | Cost-Optimized Education with scholarship recommendations | **Maximized ROI** with smart financial planning |
 | **Education-Employment Mismatch** | Real-Time Market Feedback with salary and demand data | **Relevant & Employable** skills for immediate value |
 
-## 🚀 Features
+## Features
 
-### 🧠 **AI-Powered Intelligence**
+### **AI-Powered Intelligence**
 - **Agentic AI**: Powered by Google's Gemini 2.0 Flash for intelligent reasoning
 - **Context Awareness**: Maintains conversation memory across sessions
 - **Proactive Guidance**: AI takes initiative to suggest next steps
 
-### 👤 **User Profiling & Analysis**
+### **User Profiling & Analysis**
 - Comprehensive profile collection (skills, interests, goals)
 - Resume/CV analysis with skill extraction
 - Learning style and time availability assessment
 
-### 🎯 **Career Recommendations**
+### **Career Recommendations**
 - Data-driven career matching based on interests and skills
 - Real salary data and job growth projections
 - Market demand analysis with job posting frequency
 
-### 📚 **Personalized Learning Paths**
+### **Personalized Learning Paths**
 - **Real Course Links**: Top 3 courses with actual URLs and pricing
 - **Certification Guidance**: Industry-recognized credentials with provider links
 - **Job Search Resources**: Direct links to relevant job platforms
 - Phase-by-phase curriculum with specific milestones
 
-### 💰 **Financial Planning**
+### **Financial Planning**
 - **Detailed Cost Analysis**: Monthly, weekly, yearly breakdowns
 - **ROI Calculations**: Break-even time and salary increase projections
 - **Scholarship Finder**: Targeted financial aid recommendations
 - **Payment Plan Options**: Flexible learning investment strategies
 
-### 📈 **Progress Tracking**
+### **Progress Tracking**
 - Skill mastery badges and achievements
 - Learning milestone tracking
 - Motivational progress updates
 
-## 🏗 Architecture
+## Architecture
 
 ```
 Frontend (HTML/CSS/JS) → Backend (Flask) → Agent (ADK) → AI (Gemini 2.0 Flash)
@@ -133,7 +133,7 @@ adk web
 # Direct agent testing interface
 ```
 
-## 📦 Installation
+## Installation
 
 ### **Step 1: Install Dependencies**
 ```bash
@@ -157,7 +157,7 @@ GOOGLE_GENAI_USE_VERTEXAI=FALSE
 GOOGLE_API_KEY=your_actual_api_key_here
 ```
 
-## 🎮 Usage
+## Usage
 
 ### **Three Ways to Experience SkillSphere**
 
@@ -222,7 +222,7 @@ adk web
 3. Select "multi_tool_agent" to test your SkillSphere agent
 4. Direct access to all 9 career guidance tools
 
-## 📡 API Documentation
+## API Documentation
 
 ### **Base URL**: `http://localhost:5000/api`
 
@@ -272,7 +272,7 @@ Health check endpoint.
 }
 ```
 
-## 🛠 Development
+## Development
 
 ### **Project Structure**
 ```
@@ -338,7 +338,7 @@ SkillSphere/
        result = new_career_tool(parameter)
    ```
 
-## 🎯 Deployment Options
+## Deployment Options
 
 ### **Local Development**
 ```bash
@@ -362,7 +362,7 @@ docker run -p 5000:5000 skillsphere
 - **AWS EC2**: Full control deployment
 - **Streamlit Cloud**: For Streamlit version
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md).
 
@@ -373,14 +373,14 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 4. Push to branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🏆 Hackathon Information
+## Hackathon Information
 
 **Project**: SkillSphere - AI Career Advisor  
-**Team**: VJGit1  
+**Team**: VB  
 **Technology Stack**: Google ADK, Gemini AI, Flask, HTML/CSS/JS  
 **Demo URL**: http://localhost:5000  
 
@@ -391,18 +391,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ✅ Agentic AI that takes initiative and maintains context
 - ✅ Professional UI with seamless agent integration
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **Google ADK Team** for the powerful agent development framework
 - **Google AI** for Gemini 2.0 Flash model access
 - **Course Providers** (Coursera, Udemy, edX) for educational resources
 - **Open Source Community** for inspiration and tools
 
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/VJGit1/SkillSphere/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/VJGit1/SkillSphere/discussions)
-- **Email**: support@skillsphere.ai
 
 ---
 
