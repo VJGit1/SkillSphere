@@ -1,4 +1,4 @@
-# SkillSphere - AI-Powered Career & Learning Advisor
+# SkillSphere - a holistic view of your skills and future.
 
 > Transform career uncertainty into a personalized, efficient, and cost-effective learning journey with AI-driven guidance.
 
