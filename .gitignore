@@ -173,3 +173,4 @@ agents_log/
 *key*
 *token*
 !public_key*
+multi_tool_agent/.env
