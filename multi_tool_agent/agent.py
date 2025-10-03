@@ -503,8 +503,8 @@ def recommend_career_paths(
         "total_matches": len(matched_careers),
         "market_insights": {
             "trending_fields": ["AI/ML", "Cybersecurity", "Cloud Computing", "Data Science"],
-            "remote_opportunities": f"{sum(1 for career in top_careers.values() if career.get('remote_friendly', False))} of {len(top_careers)} careers are remote-friendly",
-            "avg_time_to_proficiency": f"{sum(int(career['time_to_proficiency'].split('-')[0]) for career in top_careers.values()) // len(top_careers)}-{sum(int(career['time_to_proficiency'].split('-')[1].split()[0]) for career in top_careers.values()) // len(top_careers)} months"
+            "remote_opportunities": f"{sum(1 for career in top_careers.values() if career.get('remote_friendly', False))} of {len(top_careers)} careers are remote-friendly" if top_careers else "No careers matched",
+            "avg_time_to_proficiency": calculate_avg_proficiency_time(top_careers) if top_careers else "6-12 months (default estimate)"
         },
         "next_suggestions": chain_result["suggestions"],
         "auto_actions": chain_result["auto_actions"],
@@ -515,6 +515,34 @@ def recommend_career_paths(
             "recommendation_confidence": "high" if len(top_careers) >= 2 else "medium"
         }
     }
+
+
+def calculate_avg_proficiency_time(top_careers: Dict[str, Any]) -> str:
+    """Calculate average proficiency time from career recommendations."""
+    if not top_careers:
+        return "6-12 months (default estimate)"
+    
+    try:
+        min_times = []
+        max_times = []
+        
+        for career in top_careers.values():
+            time_str = career.get('time_to_proficiency', '6-12 months')
+            # Extract numbers from strings like "6-12 months"
+            time_parts = time_str.split('-')
+            if len(time_parts) >= 2:
+                min_times.append(int(time_parts[0]))
+                max_part = time_parts[1].split()[0]  # Get just the number part
+                max_times.append(int(max_part))
+        
+        if min_times and max_times:
+            avg_min = sum(min_times) // len(min_times)
+            avg_max = sum(max_times) // len(max_times)
+            return f"{avg_min}-{avg_max} months"
+        else:
+            return "6-12 months (default estimate)"
+    except (ValueError, IndexError, ZeroDivisionError):
+        return "6-12 months (default estimate)"
 
 
 def calculate_skill_gap(current_skills: str, required_skills: List[str]) -> Dict[str, Any]:
@@ -786,6 +814,91 @@ def generate_learning_curriculum(
 
 
 # =============================================================================
+# SIMPLE ROUGH ESTIMATES (NO COMPLEX CALCULATIONS)
+# =============================================================================
+
+def get_rough_estimates(career_path: str) -> Dict[str, Any]:
+    """
+    Provides simple rough estimates for career transitions - no complex calculations.
+    
+    Args:
+        career_path: The target career path
+        
+    Returns:
+        Dict containing quick, rough estimates for learning costs and earning potential
+    """
+    
+    # Simple rough estimates by career
+    estimates = {
+        "Software Developer": {
+            "learning_cost": 500,
+            "monthly_cost": 85,
+            "weekly_cost": 20,
+            "current_salary": 95000,
+            "potential_increase": 35000,
+            "break_even": "3-4 months"
+        },
+        "Data Scientist": {
+            "learning_cost": 700,
+            "monthly_cost": 115,
+            "weekly_cost": 28,
+            "current_salary": 110000,
+            "potential_increase": 40000,
+            "break_even": "4-5 months"
+        },
+        "UX Designer": {
+            "learning_cost": 400,
+            "monthly_cost": 65,
+            "weekly_cost": 16,
+            "current_salary": 85000,
+            "potential_increase": 25000,
+            "break_even": "4-6 months"
+        },
+        "Digital Marketing": {
+            "learning_cost": 350,
+            "monthly_cost": 60,
+            "weekly_cost": 14,
+            "current_salary": 65000,
+            "potential_increase": 20000,
+            "break_even": "5-7 months"
+        }
+    }
+    
+    career_data = estimates.get(career_path, estimates["Software Developer"])
+    
+    return {
+        "status": "success",
+        "career": career_path,
+        "rough_estimates": {
+            "total_investment": f"${career_data['learning_cost']}",
+            "monthly_cost": f"${career_data['monthly_cost']}/month", 
+            "weekly_cost": f"${career_data['weekly_cost']}/week",
+            "current_salary": f"${career_data['current_salary']:,}/year",
+            "salary_boost": f"+${career_data['potential_increase']:,}/year",
+            "break_even_time": career_data['break_even'],
+            "roi_summary": f"Invest ${career_data['learning_cost']} → Earn +${career_data['potential_increase']:,}/year"
+        },
+        "google_focus": {
+            "career_certificates": "$49/month - Google Career Certificates",
+            "cloud_certs": "$125-200 exam fees - Google Cloud Certifications", 
+            "ai_courses": "$49/month - Google AI/ML Courses"
+        },
+        "quick_facts": [
+            f"Break even in {career_data['break_even']} typically",
+            f"Salary increase: +${career_data['potential_increase']:,}/year average",
+            "Google certificates: ~$300 total investment",
+            "Remote opportunities: 80%+ for tech careers"
+        ],
+        "simple_breakdown": {
+            "learn_for": "6 months",
+            "spend_weekly": f"${career_data['weekly_cost']}",
+            "earn_yearly": f"+${career_data['potential_increase']:,}",
+            "payback_time": career_data['break_even']
+        }
+    }
+
+
+# =============================================================================
 # DYNAMIC COST CALCULATION WITH SMART PRICING
 # =============================================================================
 
@@ -861,6 +974,10 @@ def calculate_learning_costs(
     # Dynamic adjustments based on learning duration
     duration_months = int(learning_duration.split()[0]) if learning_duration.split()[0].isdigit() else 6
     
+    # Ensure duration is never zero
+    if duration_months <= 0:
+        duration_months = 6
+    
     # Time-based cost adjustments
     if duration_months <= 3:
         intensity_multiplier = 1.3  # Intensive courses cost more
@@ -870,6 +987,10 @@ def calculate_learning_costs(
         intensity_multiplier = 1.0
     
     adjusted_total = base_total * intensity_multiplier
+    
+    # Ensure adjusted_total is never zero for division
+    if adjusted_total <= 0:
+        adjusted_total = 100  # Minimum realistic cost
     
     # Calculate potential savings from scholarships
     total_scholarship_potential = sum(s["amount"] for s in costs.get("scholarship_opportunities", []))
@@ -906,20 +1027,26 @@ def calculate_learning_costs(
         "status": "success",
         "career_path": career_path,
         "cost_breakdown": {
-            "base_total": f"${base_total:,.2f}",
-            "adjusted_total": f"${adjusted_total:,.2f}",
-            "monthly_cost": f"${monthly_cost:,.2f}",
-            "weekly_cost": f"${weekly_cost:,.2f}",
-            "daily_cost": f"${weekly_cost/7:,.2f}"
+            "base_total": f"${base_total:,.0f}",
+            "adjusted_total": f"${adjusted_total:,.0f}",
+            "monthly_cost": f"${monthly_cost:,.0f}",
+            "weekly_cost": f"${weekly_cost:,.0f}",
+            "daily_cost": f"${weekly_cost/7:,.0f}"
         },
         "scholarship_opportunities": costs.get("scholarship_opportunities", []),
-        "total_scholarship_potential": f"${total_scholarship_potential:,.2f}",
-        "net_cost_after_scholarships": f"${max(0, adjusted_total - total_scholarship_potential):,.2f}",
+        "total_scholarship_potential": f"${total_scholarship_potential:,.0f}",
+        "net_cost_after_scholarships": f"${max(0, adjusted_total - total_scholarship_potential):,.0f}",
         "roi_analysis": {
-            "potential_salary_increase": f"${potential_increase:,.2f}",
+            "potential_salary_increase": f"${potential_increase:,.0f}",
             "break_even_time": f"{break_even_months} months",
-            "annual_roi": f"{annual_roi:,.1f}%",
-            "5_year_net_benefit": f"${(potential_increase * 5) - adjusted_total:,.2f}"
+            "annual_roi": f"{annual_roi:,.0f}%",
+            "5_year_net_benefit": f"${(potential_increase * 5) - adjusted_total:,.0f}"
+        },
+        "quick_estimates": {
+            "monthly_investment": f"${int(adjusted_total/6)}/month (spread over 6 months)",
+            "weekly_investment": f"${int(adjusted_total/26)}/week (spread over 6 months)", 
+            "yearly_earnings_boost": f"${potential_increase:,.0f}/year after completion",
+            "simple_roi": f"Every $1 invested = ${potential_increase/max(adjusted_total, 1):,.0f} yearly return"
         },
         "pricing_insights": pricing_insights,
         "next_suggestions": chain_result["suggestions"],
@@ -1175,6 +1302,10 @@ def calculate_learning_costs(
     total_cost = learning_data.get("total_cost", {"min": 100, "max": 500, "avg": 250})
     duration_months = learning_data.get("duration_months", 6)
     
+    # Ensure duration is never zero
+    if duration_months <= 0:
+        duration_months = 6
+    
     # Weekly and monthly breakdowns
     monthly_avg = total_cost["avg"] / duration_months
     weekly_avg = monthly_avg / 4.3  # Average weeks per month
@@ -1188,6 +1319,11 @@ def calculate_learning_costs(
     }
     
     adjusted_duration = duration_months * time_multiplier.get(time_commitment, 1.0)
+    
+    # Ensure adjusted_duration is never zero
+    if adjusted_duration <= 0:
+        adjusted_duration = duration_months if duration_months > 0 else 6
+    
     adjusted_monthly = total_cost["avg"] / adjusted_duration
     
     return {
@@ -1252,7 +1388,16 @@ def _calculate_break_even(investment: int, career: str) -> str:
         "Data Scientist": 45000,
         "UX Designer": 30000
     }
-    monthly_increase = avg_increases.get(career, 25000) / 12
+    annual_increase = avg_increases.get(career, 25000)
+    monthly_increase = annual_increase / 12
+    
+    # Ensure we don't divide by zero
+    if monthly_increase <= 0:
+        return "12-18"  # Default estimate
+    
+    if investment <= 0:
+        return "0"  # Free courses
+    
     return f"{investment / monthly_increase:.1f}"
 
 
@@ -1375,7 +1520,16 @@ root_agent = Agent(
         "   - Break-even: 8.5 months after job placement\n\n"
         
         "Remember: You're powered by Google's most advanced AI - use that intelligence to provide \n"
-        "comprehensive, data-driven, and actionable career guidance!"
+        "comprehensive, data-driven, and actionable career guidance!\n\n"
+        
+        "💡 **NEW: Quick Rough Estimates Feature**\n"
+        "Use get_rough_estimates() for instant ballpark figures:\n"
+        "• Weekly costs: ~$15-30/week\n" 
+        "• Salary boost: +$25k-40k/year\n"
+        "• Break-even: 3-6 months\n"
+        "• Google-focused for DevFest!\n\n"
+        
+        "Example: 'Software dev costs ~$20/week, earn +$35k/year, break-even in 3 months'"
     ),
     tools=[
         start_career_journey,
@@ -1385,6 +1539,7 @@ root_agent = Agent(
         recommend_career_paths,
         generate_learning_curriculum,
         track_learning_progress,
+        get_rough_estimates,
         calculate_learning_costs,
         find_scholarships
     ],
