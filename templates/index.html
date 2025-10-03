@@ -327,7 +327,7 @@
                 
                 if (data.status === 'success') {
                     // Add agent response
-                    addMessage(data.response.message, 'agent');
+                    addMessage(data.response, 'agent');
                 } else {
                     addMessage('Sorry, I encountered an error. Please try again.', 'agent');
                 }
@@ -356,13 +356,52 @@
             
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
-            contentDiv.textContent = content;
+            
+            // Handle different response types from agent
+            if (sender === 'agent' && typeof content === 'object') {
+                // Agent sent structured response
+                contentDiv.innerHTML = formatAgentResponse(content);
+            } else {
+                // Plain text message
+                contentDiv.innerHTML = formatMessage(content);
+            }
             
             messageDiv.appendChild(contentDiv);
             chatMessages.appendChild(messageDiv);
             
             // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Format agent responses with proper styling
+        function formatAgentResponse(response) {
+            let html = '';
+            
+            // Main message
+            if (response.message) {
+                html += formatMessage(response.message);
+            }
+            
+            // Add suggestions if available
+            if (response.suggestions && response.suggestions.length > 0) {
+                html += '<div style="margin-top: 15px; padding: 10px; background: #f0f8ff; border-radius: 8px;">';
+                html += '<strong>💡 Suggestions:</strong><br>';
+                response.suggestions.forEach(suggestion => {
+                    html += `<span style="display: inline-block; margin: 5px; padding: 5px 10px; background: #667eea; color: white; border-radius: 15px; cursor: pointer; font-size: 12px;" onclick="sendQuickMessage('${suggestion}')">${suggestion}</span>`;
+                });
+                html += '</div>';
+            }
+            
+            return html;
+        }
+        
+        // Format messages with proper line breaks and styling
+        function formatMessage(content) {
+            return content
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/🔗 (https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #667eea;">🔗 $1</a>')
+                .replace(/• /g, '&bull; ');
         }
         
         // Show/hide typing indicator
