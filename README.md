@@ -30,7 +30,7 @@ Students and professionals struggle with career uncertainty and inefficient upsk
 - **💸 High Financial Risk**: Spending money with no guaranteed ROI
 - **🎓 Education-Employment Mismatch**: Outdated curricula leaving workers underprepared
 
-## ✨ Our Solution
+## Our Solution
 
 SkillSphere provides a **data-driven AI platform** that transforms career uncertainty into a personalized, efficient, and cost-effective journey. Our solution acts as a dynamic digital career advisor, aligning individual potential with real-time job market demand.
 
@@ -88,7 +88,7 @@ Frontend (HTML/CSS/JS) → Backend (Flask) → Agent (ADK) → AI (Gemini 2.0 Fl
 - **🧠 Agent**: Google ADK agent with specialized career tools
 - **🔑 AI Engine**: Gemini 2.0 Flash for intelligent reasoning
 
-## ⚡ Quick Start
+## Quick Start
 
 ### **Prerequisites**
 - Python 3.8+
