@@ -14,7 +14,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'multi_tool_agent'))
 
 try:
-    from agent import root_agent
+    from multi_tool_agent.agent import root_agent as agent
     print("✅ Successfully imported SkillSphere agent")
     AGENT_AVAILABLE = True
 except ImportError as e:
